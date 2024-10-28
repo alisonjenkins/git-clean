@@ -10,8 +10,8 @@ repository = "https://github.com/mcasper/git-clean"
 autotests = false
 
 [dependencies]
-clap = "2.33.1"
-regex = "1.6"
+clap = "4.5.20"
+regex = "1.11.1"
 
 [dev-dependencies]
 tempdir = "0.3"
