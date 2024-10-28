@@ -4,6 +4,9 @@
 *.rlib
 *.dll
 
+# Direnv
+.direnv
+
 # Executables
 *.exe
 
