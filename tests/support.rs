@@ -36,7 +36,6 @@ impl ProjectBuilder {
 
         let project = Project {
             directory: work_dir,
-            name: self.name,
             remote: remote_dir,
         };
 
@@ -58,7 +57,6 @@ impl ProjectBuilder {
 
 pub struct Project {
     directory: TempDir,
-    pub name: String,
     remote: TempDir,
 }
 

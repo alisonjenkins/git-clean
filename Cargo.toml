@@ -1,5 +1,6 @@
 [package]
 name = "git-clean"
+edition = "2021"
 version = "0.8.0"
 authors = ["Matt Casper <matthewvcasper@gmail.com>"]
 license = "MIT"

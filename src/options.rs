@@ -1,6 +1,6 @@
+use crate::commands::{output, run_command};
+use crate::error::Error;
 use clap::ArgMatches;
-use commands::{output, run_command};
-use error::Error;
 use regex::Regex;
 
 #[derive(Debug)]
@@ -106,8 +106,8 @@ impl Options {
 #[cfg(test)]
 mod test {
     use super::{DeleteMode, Options};
+    use crate::cli;
     use clap;
-    use cli;
 
     // Helpers
     fn parse_args(args: Vec<&str>) -> clap::ArgMatches {
