@@ -12,12 +12,14 @@ pub fn build_cli() -> Command {
             Arg::new("locals")
                 .short('l')
                 .long("locals")
+                .action(clap::ArgAction::SetTrue)
                 .help("Only delete local branches"),
         )
         .arg(
             Arg::new("remotes")
                 .short('r')
                 .long("remotes")
+                .action(clap::ArgAction::SetTrue)
                 .help("Only delete remote branches"),
         )
         .arg(
@@ -30,6 +32,7 @@ pub fn build_cli() -> Command {
             Arg::new("squashes")
                 .short('s')
                 .long("squashes")
+                .action(clap::ArgAction::SetTrue)
                 .help("Check for squashes by finding branches incompatible with main"),
         )
         .arg(
