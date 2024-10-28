@@ -3,9 +3,6 @@ use commands::{output, run_command};
 use error::Error;
 use regex::Regex;
 
-const DEFAULT_REMOTE: &str = "origin";
-const DEFAULT_BRANCH: &str = "main";
-
 #[derive(Debug)]
 pub enum DeleteMode {
     Local,
@@ -17,9 +14,9 @@ pub use self::DeleteMode::*;
 
 impl DeleteMode {
     pub fn new(opts: &ArgMatches) -> DeleteMode {
-        if opts.is_present("locals") {
+        if opts.contains_id("locals") {
             Local
-        } else if opts.is_present("remotes") {
+        } else if opts.contains_id("remotes") {
             Remote
         } else {
             Both
@@ -47,17 +44,24 @@ pub struct Options {
 
 impl Options {
     pub fn new(opts: &ArgMatches) -> Options {
-        let default_ignored = Vec::new();
-        let ignored = opts
-            .values_of("ignore")
-            .map(|i| i.map(|v| v.to_owned()).collect::<Vec<String>>())
-            .unwrap_or(default_ignored);
+        let ignored: Vec<String> = opts
+            .get_many("ignore")
+            .unwrap_or_default()
+            .map(|s: &String| s.to_string())
+            .collect();
+
         Options {
-            remote: opts.value_of("remote").unwrap_or(DEFAULT_REMOTE).into(),
-            base_branch: opts.value_of("branch").unwrap_or(DEFAULT_BRANCH).into(),
+            remote: opts
+                .get_one::<String>("remote")
+                .expect("Should be able to get remote")
+                .into(),
+            base_branch: opts
+                .get_one::<String>("branch")
+                .expect("Should be able to get base branch")
+                .into(),
             ignored_branches: ignored,
-            squashes: opts.is_present("squashes"),
-            delete_unpushed_branches: opts.is_present("delete-unpushed-branches"),
+            squashes: opts.contains_id("squashes"),
+            delete_unpushed_branches: opts.contains_id("delete-unpushed-branches"),
             delete_mode: DeleteMode::new(opts),
         }
     }
@@ -117,21 +121,21 @@ mod test {
 
         match DeleteMode::new(&matches) {
             DeleteMode::Local => (),
-            other @ _ => panic!("Expected a DeleteMode::Local, but found: {:?}", other),
+            other => panic!("Expected a DeleteMode::Local, but found: {:?}", other),
         };
 
         let matches = parse_args(vec!["git-clean", "-r"]);
 
         match DeleteMode::new(&matches) {
             DeleteMode::Remote => (),
-            other @ _ => panic!("Expected a DeleteMode::Remote, but found: {:?}", other),
+            other => panic!("Expected a DeleteMode::Remote, but found: {:?}", other),
         };
 
         let matches = parse_args(vec!["git-clean"]);
 
         match DeleteMode::new(&matches) {
             DeleteMode::Both => (),
-            other @ _ => panic!("Expected a DeleteMode::Both, but found: {:?}", other),
+            other => panic!("Expected a DeleteMode::Both, but found: {:?}", other),
         };
     }
 

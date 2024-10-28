@@ -33,7 +33,7 @@ pub fn run(matches: &ArgMatches) -> Result<(), error::Error> {
         return Ok(());
     }
 
-    if !matches.is_present("yes") {
+    if !matches.contains_id("yes") {
         branches.print_warning_and_prompt(&options.delete_mode)?;
     }
 
