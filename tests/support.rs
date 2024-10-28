@@ -158,8 +158,8 @@ impl TestCommand {
 
     pub fn run(&self) -> TestCommandResult {
         let mut command = Command::new(&self.top_level_command);
-        for &(ref k, ref v) in &self.envs {
-            command.env(&k, &v);
+        for (ref k, ref v) in &self.envs {
+            command.env(k, v);
         }
         let output = command
             .args(&self.args)
@@ -167,7 +167,7 @@ impl TestCommand {
             .output()
             .unwrap();
 
-        TestCommandResult { output: output }
+        TestCommandResult { output }
     }
 }
 

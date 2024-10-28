@@ -26,6 +26,7 @@ pub fn build_cli() -> Command {
             Arg::new("yes")
                 .short('y')
                 .long("yes")
+                .action(clap::ArgAction::SetTrue)
                 .help("Skip the check for deleting branches"),
         )
         .arg(
@@ -39,6 +40,7 @@ pub fn build_cli() -> Command {
             Arg::new("delete-unpushed-branches")
                 .short('d')
                 .long("delete-unpushed-branches")
+                .action(clap::ArgAction::SetTrue)
                 .help("Delete any local branch that is not present on the remote. Use this to speed up the checks if such branches should always be considered as merged"),
         )
         .arg(
@@ -59,6 +61,7 @@ pub fn build_cli() -> Command {
             Arg::new("ignore")
                 .short('i')
                 .long("ignore")
+                .action(clap::ArgAction::Append)
                 .help("Ignore given branch (repeat option for multiple branches)"),
         )
 }

@@ -14,9 +14,9 @@ pub use self::DeleteMode::*;
 
 impl DeleteMode {
     pub fn new(opts: &ArgMatches) -> DeleteMode {
-        if opts.contains_id("locals") {
+        if *opts.get_one("locals").expect("locals should be set") {
             Local
-        } else if opts.contains_id("remotes") {
+        } else if *opts.get_one("remotes").expect("remotes should be set") {
             Remote
         } else {
             Both
@@ -60,8 +60,10 @@ impl Options {
                 .expect("Should be able to get base branch")
                 .into(),
             ignored_branches: ignored,
-            squashes: opts.contains_id("squashes"),
-            delete_unpushed_branches: opts.contains_id("delete-unpushed-branches"),
+            squashes: *opts.get_one("squashes").expect("squashes should be set"),
+            delete_unpushed_branches: *opts
+                .get_one("delete-unpushed-branches")
+                .expect("delete-unpushed-branches should be set"),
             delete_mode: DeleteMode::new(opts),
         }
     }
@@ -107,7 +109,6 @@ impl Options {
 mod test {
     use super::{DeleteMode, Options};
     use crate::cli;
-    use clap;
 
     // Helpers
     fn parse_args(args: Vec<&str>) -> clap::ArgMatches {
@@ -125,6 +126,10 @@ mod test {
         };
 
         let matches = parse_args(vec!["git-clean", "-r"]);
+
+        if let DeleteMode::Local = DeleteMode::new(&matches) {
+            panic!("Expected a DeleteMode::Remote, but found: DeleteMode::Local")
+        };
 
         match DeleteMode::new(&matches) {
             DeleteMode::Remote => (),
